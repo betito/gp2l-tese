@@ -2,6 +2,7 @@ package gp.objects;
 
 public class GeneralData {
 
+	private String id = "";
 	private String source = "";
 	private String data = "";
 
@@ -9,8 +10,9 @@ public class GeneralData {
 		super();
 	}
 
-	public GeneralData(String source, String data) {
+	public GeneralData(String id, String source, String data) {
 		super();
+		this.id = id;
 		this.source = source;
 		this.data = data;
 	}
@@ -29,6 +31,14 @@ public class GeneralData {
 
 	public void setData(String data) {
 		this.data = data;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
 }
