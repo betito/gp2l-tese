@@ -7,18 +7,34 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.regex.Pattern;
 
 public class Utils {
 
-	public static int[][] prepareInput(Hashtable<String, Integer> sources,
-			Hashtable<String, Integer> data) {
+	public static ArrayList<Object> prepareInput(String basePath, int clazz) {
 
-		int matrix[][] = null;
+		ArrayList<Object> arrayObj = new ArrayList<Object>();
 
-		return matrix;
+		String[] records = Utils.readFile(basePath).toString()
+				.split(Consts.TEXT_RECORD_DELIMITER);
+
+		switch (clazz) {
+		case Consts.BOOK:
+
+			for (String str : records) {
+
+				Object obj = Utils.getBook(str);
+
+				arrayObj.add(obj);
+
+			}
+
+			break;
+		}
+
+		return arrayObj;
+
 	}
 
 	public static StringBuilder readFile(String strFileName) {
@@ -86,13 +102,13 @@ public class Utils {
 		string = clearNoise(string);
 		// System.out.printf("FORMAT (AFTER)  :: %s\n", string);
 
-		if (listOfauthors == null) {
+		if (listOfauthors == null) {	
 			listOfauthors = new ArrayList<Author>();
 		}
 
 		if (!(string.equals(""))) {
 			string = canonicalValue(string);
-			data = string.split("[;\\|]");
+			data = string.split(";");
 			// data = string.split(";");
 			data = removeEmptyValues(data);
 			// System.out.println("tamanho do data :: " + data.length);
@@ -126,11 +142,11 @@ public class Utils {
 						// tmpAuthor.getMiddleName());
 					}
 
-					// System.out.println("FN : [" + tmpAuthor.getFirstName() +
-					// "] MD : ["
-					// + tmpAuthor.getMiddleName() + "] LN : [" +
-					// tmpAuthor.getLastName()
-					// + "]");
+//					 System.out.println("FN : [" + tmpAuthor.getFirstName() +
+//					 "] MD : ["
+//					 + tmpAuthor.getMiddleName() + "] LN : [" +
+//					 tmpAuthor.getLastName()
+//					 + "]");
 
 					listOfauthors.add(tmpAuthor);
 				}
@@ -159,6 +175,8 @@ public class Utils {
 
 	public static String canonicalValue(String string) {
 
+		string = string.replaceAll("\\s+and\\s+", ";");
+		string = string.replaceAll("|", ";");
 		string = string.replaceAll("^\\s+", "");
 		string = string.replaceAll("$\\s+", "");
 		string = string.replaceAll("\\n", "");
@@ -231,15 +249,15 @@ public class Utils {
 
 	}
 
-//	public static String formatValuesToBrackets(String string) {
-//		String[] output = null;
-//		String tmp;
-//
-//		output = string.split(";");
-//
-//		// return output;
-//
-//		return null;
-//	}
+	// public static String formatValuesToBrackets(String string) {
+	// String[] output = null;
+	// String tmp;
+	//
+	// output = string.split(";");
+	//
+	// // return output;
+	//
+	// return null;
+	// }
 
 }

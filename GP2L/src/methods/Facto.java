@@ -1,5 +1,6 @@
 package methods;
 
+import gp.model.DataInstance;
 import gp.objects.Book;
 import gp.utils.Consts;
 
@@ -13,31 +14,31 @@ public class Facto {
 	double[] CurrentVoteCount = null;
 	double[] TCurrentRound = null;
 	double[] TLastRound = null;
-	int[][] matrix = { { 1, 1, 0, 1, 1 }, { 1, 0, 1, 0, 1 }, { 1, 1, 1, 0, 1 } };
+	int[][] matrix = null;
 	Hashtable<String, Integer> facts_id = null;
 	Hashtable<String, Integer> srcs_id = null;
 
-	public Facto(final String[] facts_names, final String[] sources_names) {
+	public Facto(Hashtable<String, Integer> facts,
+			Hashtable<String, Integer> srcs, int[][] matrix) {
 		super();
 
-		this.facts_id = new Hashtable<String, Integer>();
+		if (DataInstance.getInstance() != null) {
+			this.facts_id = facts;
+			this.srcs_id = srcs;
+			this.matrix = matrix;
 
-		for (int i = 0; i < facts_names.length; i++) {
-			facts_id.put(facts_names[i], new Integer(i));
+			// printHashtable(this.facts_id);
+			// printHashtable(this.srcs_id);
+
+			initCurrentVoteCount();
+
+			computeVote();
+
+		} else {
+
+			System.err.println("FACTO: Data Instance is NULL!");
+
 		}
-
-		this.srcs_id = new Hashtable<String, Integer>();
-
-		for (int i = 0; i < sources_names.length; i++) {
-			srcs_id.put(sources_names[i], new Integer(i));
-		}
-
-		printHashtable(this.facts_id);
-		printHashtable(this.srcs_id);
-
-		initCurrentVoteCount();
-
-		computeVote();
 
 	}
 
@@ -54,6 +55,7 @@ public class Facto {
 
 	}
 
+	@SuppressWarnings("unused")
 	private void printHashtable(final Hashtable<String, Integer> attribute) {
 
 		for (Enumeration<String> en = attribute.keys(); en.hasMoreElements();) {
@@ -78,11 +80,6 @@ public class Facto {
 
 	public void setValues(ArrayList<Book> values) {
 		Values = values;
-	}
-
-	private boolean prepareMatrix() {
-
-		return false;
 	}
 
 	/*
@@ -165,18 +162,16 @@ public class Facto {
 			System.out.println();
 			printTrustCurrentRound();
 
+			double sim = (CosineSim.measureCosineSimilarity(this.TCurrentRound,
+					this.TLastRound));
 
-			double sim = (CosineSim.measureCosineSimilarity(
-					this.TCurrentRound, this.TLastRound));
-			
 			System.out.printf("SIM\t::\t[%.5f]\n", sim);
-			if (1 - sim < 0.0001){
+			if (1 - sim < 0.0001) {
 				keep_iteration = false;
 			}
 
 			saveCurrentRound();
-			
-			
+
 		}
 
 	}

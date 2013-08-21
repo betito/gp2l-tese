@@ -1,4 +1,4 @@
-package gp.foo;
+package gp.model;
 
 import java.util.Hashtable;
 
@@ -6,6 +6,7 @@ public class DataInstance {
 
 	private Hashtable<String, Integer> Sources = null;
 	private Hashtable<String, Integer> Data = null;
+	private int[][] Matrix = null;
 	private static DataInstance instance = null;
 
 	protected DataInstance() {
@@ -39,5 +40,18 @@ public class DataInstance {
 	public static void setInstance(DataInstance instance) {
 		DataInstance.instance = instance;
 	}
+
+	public int[][] getMatrix() {
+		return Matrix;
+	}
+
+	public void setMatrix(int[][] matrix) {
+		Matrix = matrix;
+	}
+	
+	public void checkMatrix(int i, int j, int value) {
+		Matrix[i][j] = value;
+	}
+	
 
 }
