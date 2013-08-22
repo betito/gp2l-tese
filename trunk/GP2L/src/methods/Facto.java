@@ -191,6 +191,7 @@ public class Facto {
 
 	}
 
+	@SuppressWarnings("unused")
 	private void printTrustCurrentRound() {
 		int pos = 0;
 		String fname = "";
@@ -218,6 +219,8 @@ public class Facto {
 
 	}
 
+	
+	@SuppressWarnings("unused")
 	private void printCurrentVoteCount() {
 		int pos = 0;
 		String fname = "";
