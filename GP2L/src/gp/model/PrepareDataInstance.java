@@ -18,9 +18,15 @@ public class PrepareDataInstance {
 	public PrepareDataInstance(String basePath, int ClassType, String Id,
 			String sourceField, String dataField) {
 
+		System.err.println("PARSING BASE :: " + basePath);
+		
 		ArrayList<Object> records = Utils.prepareInput(basePath, ClassType);
 
+		System.err.println("COUNTING OCCURING..." );
+		
 		runPrepareMatrix(records, Id, sourceField, dataField);
+		
+		System.err.println("DATA INSTANCE READY...");
 
 	}
 
@@ -105,10 +111,10 @@ public class PrepareDataInstance {
 
 		}
 
-		System.out.printf("sources :: %d\nData :: %d\n", sourcesIds.size(),
-				dataIds.size());
+//		System.out.printf("sources :: %d\nData :: %d\n", sourcesIds.size(),
+//				dataIds.size());
 
-		Occur = new int[sourcesIds.size()][dataIds.size()];
+		Occur = new int[dataIds.size()][sourcesIds.size()];
 		for (int i = 0; i < Occur.length; i++) {
 			for (int j = 0; j < Occur[i].length; j++) {
 				Occur[i][j] = 0;
@@ -120,20 +126,20 @@ public class PrepareDataInstance {
 
 			iSourceId = getInt(sourcesIds, gd.getSource());
 			jDataId = getInt(dataIds, gd.getData());
-			Occur[iSourceId][jDataId] = 1;
+			Occur[jDataId][iSourceId] = 1;
 
-			System.out.println("ID\t::\t[" + gd.getId() + "] ");
-			System.out.println("SOURCE\t::\t["
-					+ sourcesIds.get(gd.getSource()).toString() + "] "
-					+ gd.getSource());
-			System.out.println("DATA\t::\t["
-					+ dataIds.get(gd.getData()).toString() + "] "
-					+ gd.getData());
-			System.out.println("=======================");
-
-			System.out.println("Source :: "
-					+ getInt(sourcesIds, gd.getSource()));
-			System.out.println("Data :: " + getInt(dataIds, gd.getData()));
+//			System.out.println("ID\t::\t[" + gd.getId() + "] ");
+//			System.out.println("SOURCE\t::\t["
+//					+ sourcesIds.get(gd.getSource()).toString() + "] "
+//					+ gd.getSource());
+//			System.out.println("DATA\t::\t["
+//					+ dataIds.get(gd.getData()).toString() + "] "
+//					+ gd.getData());
+//			System.out.println("=======================");
+//
+//			System.out.println("Source :: "
+//					+ getInt(sourcesIds, gd.getSource()));
+//			System.out.println("Data :: " + getInt(dataIds, gd.getData()));
 
 		}
 

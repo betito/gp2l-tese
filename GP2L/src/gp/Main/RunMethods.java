@@ -19,6 +19,8 @@ public class RunMethods {
 				.getInstance().getSources(), DataInstance.getInstance()
 				.getMatrix());
 
+		System.err.println("FIM...");
+
 	}
 
 }

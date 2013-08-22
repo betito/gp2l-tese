@@ -22,6 +22,9 @@ public class Facto {
 			Hashtable<String, Integer> srcs, int[][] matrix) {
 		super();
 
+		this.facts_id = facts;
+		this.srcs_id = srcs;
+		this.matrix = matrix;
 		if (DataInstance.getInstance() != null) {
 			this.facts_id = facts;
 			this.srcs_id = srcs;
@@ -31,6 +34,10 @@ public class Facto {
 			// printHashtable(this.srcs_id);
 
 			initCurrentVoteCount();
+
+			System.out.println("MATRIX");
+			System.out.println("LINES :: " + this.matrix.length);
+			System.out.println("COLS  :: " + this.matrix[0].length);
 
 			computeVote();
 
@@ -43,9 +50,10 @@ public class Facto {
 	}
 
 	private void initCurrentVoteCount() {
-		this.CurrentVoteCount = new double[this.srcs_id.size()];
-		this.TCurrentRound = new double[this.srcs_id.size()];
-		this.TLastRound = new double[this.srcs_id.size()];
+		int factsLen = this.facts_id.size();
+		this.CurrentVoteCount = new double[factsLen];
+		this.TCurrentRound = new double[factsLen];
+		this.TLastRound = new double[factsLen];
 
 		for (int i = 0; i < this.CurrentVoteCount.length; i++) {
 			this.CurrentVoteCount[i] = 0.0;
@@ -158,9 +166,9 @@ public class Facto {
 			System.out
 					.printf("\n======================================= \nRound :: [%d]\n",
 							round);
-			printCurrentVoteCount();
-			System.out.println();
-			printTrustCurrentRound();
+			// printCurrentVoteCount();
+			// System.out.println();
+			// printTrustCurrentRound();
 
 			double sim = (CosineSim.measureCosineSimilarity(this.TCurrentRound,
 					this.TLastRound));
@@ -239,4 +247,5 @@ public class Facto {
 		return (1.0 - Math.pow(Math.E, (Consts.EXP_TRUST * votecount)));
 
 	}
+
 }
