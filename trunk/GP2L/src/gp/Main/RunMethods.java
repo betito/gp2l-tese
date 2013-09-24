@@ -15,9 +15,13 @@ public class RunMethods {
 		new PrepareDataInstance("./bases/livros/book.txt", Consts.BOOK, "ISBN",
 				"Source", "listOfAuthorsSTR");
 
-		new Facto(DataInstance.getInstance().getData(), DataInstance
-				.getInstance().getSources(), DataInstance.getInstance()
-				.getMatrix());
+		 new Facto(DataInstance.getInstance().getData(), DataInstance
+		 .getInstance().getSources(), DataInstance.getInstance()
+		 .getMatrix());
+
+//		new AccurPR(DataInstance.getInstance().getData(), DataInstance
+//				.getInstance().getSources(), DataInstance.getInstance()
+//				.getMatrix());
 
 		System.err.println("FIM...");
 
