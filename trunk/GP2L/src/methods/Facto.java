@@ -1,6 +1,5 @@
 package methods;
 
-import gp.model.DataInstance;
 import gp.objects.Book;
 import gp.utils.Consts;
 
@@ -22,10 +21,7 @@ public class Facto {
 			Hashtable<String, Integer> srcs, int[][] matrix) {
 		super();
 
-		this.facts_id = facts;
-		this.srcs_id = srcs;
-		this.matrix = matrix;
-		if (DataInstance.getInstance() != null) {
+		if (matrix != null) {
 			this.facts_id = facts;
 			this.srcs_id = srcs;
 			this.matrix = matrix;
@@ -36,14 +32,15 @@ public class Facto {
 			initCurrentVoteCount();
 
 			System.out.println("MATRIX");
-			System.out.println("LINES :: " + this.matrix.length);
-			System.out.println("COLS  :: " + this.matrix[0].length);
+			System.out.println("DATA :: " + this.matrix.length);
+			System.out.println("SRCS :: " + this.matrix[0].length);
 
 			computeVote();
 
 		} else {
 
-			System.err.println("FACTO: Data Instance is NULL!");
+			System.err.println(this.getClass().getCanonicalName()
+					+ ": Data Instance is NULL!");
 
 		}
 
@@ -75,7 +72,7 @@ public class Facto {
 
 		System.out.println("...");
 	}
-
+	
 	public Facto(ArrayList<Book> values) {
 		super();
 		Values = values;
@@ -94,7 +91,7 @@ public class Facto {
 	 * compute the C(T_i): for the sum of the vote for all source who has that
 	 * value.
 	 */
-	private void computeVote() {
+	public void computeVote() {
 		double sum = 0.0;
 		boolean keep_iteration = true;
 
@@ -219,7 +216,6 @@ public class Facto {
 
 	}
 
-	
 	@SuppressWarnings("unused")
 	private void printCurrentVoteCount() {
 		int pos = 0;
