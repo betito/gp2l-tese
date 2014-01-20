@@ -12,60 +12,96 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
 
-import methods.Voting;
-
 public class RunVoting {
 
 	public static void main(String[] args) {
+		double initT = System.currentTimeMillis();
 
 		// System.out.println(System.getProperty("user.dir"));
 
 		GoldenSilverBooks gsb_golden = new GoldenSilverBooks(
 				"./bases/livros/book_golden.txt");
+//		GoldenSilverBooks gsb_golden = new GoldenSilverBooks(
+//				"./bases/livros/teste_book_golden.txt");
 		// GoldenSilverBooks gb_silver = new
 		// GoldenSilverBooks("./bases/livros/book_silver.txt");
-		BaseOfAllBooks allBooks = new BaseOfAllBooks(
-				"./bases/livros/book.txt");
-		ArrayList<Book> auxAllBooks = allBooks.getListOfBooks();
+		BaseOfAllBooks allBooks = new BaseOfAllBooks("./bases/livros/book.txt");
+		// BaseOfAllBooks allBooks = new BaseOfAllBooks(
+		// "./bases/livros/teste_book_3.txt");
+		// ArrayList<Book> auxAllBooks = allBooks.getListOfBooks();
 
 		ArrayList<Book> goldenBooks = gsb_golden.getListOfBooks();
 
-		int x = 0;
-		for (Iterator<Book> en = goldenBooks.iterator(); en.hasNext(); x++) {
+		// ArrayList<String> b = allBooks.getBookByISBN("9780073516677");
+
+		// getListOfAllBooks(b);
+		int correctIn = 0;
+		int correctExac = 0;
+		for (Iterator<Book> en = goldenBooks.iterator(); en.hasNext();) {
 			Book book = en.next();
 			System.out.println("ISBN :: " + book.getISBN());
 			System.out.println("AUTHORS\n" + book.getListOfAuthors_toString());
-//			ArrayList<String> listOfBooks_asString = allBooks
-//					.getBookByISBN(book.getISBN());
-//			ArrayList<Book> books = getListOfAllBooks(listOfBooks_asString);
-//			InstanceValue insValue = countMatchAuthors(book, books);
-			InstanceValue insValue = Voting.getFactoByVoting(book, allBooks);
+			ArrayList<String> listOfBooks_asString = allBooks
+					.getBookByISBN(book.getISBN());
+			// String listOfBooks_inLines = allBooks
+			// .getBookByISBN_asStringInLines((book.getISBN()));
+			// System.out.println("------\nLista de Todos os Livros\n\n"
+			// + listOfBooks_inLines + "\n---------");
+			ArrayList<Book> books = getListOfAllBooks(listOfBooks_asString);
+			if (books != null) {
+				InstanceValue insValue = countMatchAuthors(book, books);
+				// InstanceValue insValue = Voting.getFactoByVoting(book,
+				// allBooks);
 
-			System.out.printf("[%d]\t==\t[%s]\n", insValue.getFreq(),
-					insValue.getValue());
+				 System.out.printf("[%d]\t==\t[%s]\n", insValue.getFreq(),
+				 insValue.getValue());
 
-			// Utils.printBook(aux);
+				if (book.isAuthorIn(insValue.getValue())) {
+					System.out.printf("== %s\n", insValue.getValue());
+					correctIn++;
+				}
+				
+				if (book.isAuthorExac(insValue.getValue())) {
+					System.out.printf("== %s\n", insValue.getValue());
+					correctExac++;
+				}
+				// Utils.printBook(aux);
+			} else {
+				System.out.printf("Book [%s] Not Available in this Base!!!\n",
+						book.getISBN());
+			}
+			System.out.println("=============================");
 		}
+
+		double endT = System.currentTimeMillis();
+		System.out.printf("Total In = %d\nTotal Exac = %d\n", correctIn, correctExac);
+		System.out.printf("Exec Time = %.3g\n", (endT-initT));
+
 	}
 
 	private static ArrayList<Book> getListOfAllBooks(ArrayList<String> allBooks) {
 
 		ArrayList<Book> listOfBooks = new ArrayList<Book>();
 
-		for (Iterator<String> iterator = allBooks.iterator(); iterator
-				.hasNext();) {
-			String string = (String) iterator.next();
-			Book b = Utils.getBook(string);
-//			System.out.printf("\tLivro :: %s\n", b.getTitle());
-//			System.out.printf("\tAuthor(s) :: %s\n", b.getOriginalAuthors());
-//			System.out.printf("\tAuthor(s) :: %s\n",
-//					b.getListOfAuthors_toString());
-//			System.out.printf("-----\n");
-			listOfBooks.add(b);
+		if (allBooks != null) {
+			for (Iterator<String> iterator = allBooks.iterator(); iterator
+					.hasNext();) {
+				String string = (String) iterator.next();
+				Book b = Utils.getBook(string);
+				// System.out.printf("\tLivro :: %s\n", b.getTitle());
+				// System.out.printf("\tAuthor(s) :: %s\n",
+				// b.getOriginalAuthors());
+				// System.out.printf("\tAuthor(s) :: %s\n",
+				// b.getListOfAuthors_toString());
+				// System.out.printf("-----\n");
+				listOfBooks.add(b);
 
+			}
+
+			return listOfBooks;
+		} else {
+			return null;
 		}
-
-		return listOfBooks;
 	}
 
 	private static InstanceValue countMatchAuthors(Book bGold,
@@ -73,8 +109,8 @@ public class RunVoting {
 
 		Hashtable<String, Integer> CountOcur = new Hashtable<String, Integer>();
 
-//		System.out.println("Golden\n" + bGold.getListOfAuthors_toString());
-//		System.out.println("Outros\n");
+		// System.out.println("Golden\n" + bGold.getListOfAuthors_toString());
+		// System.out.println("Outros\n");
 		for (Iterator<Book> iterator = ListOther.iterator(); iterator.hasNext();) {
 
 			Book b = iterator.next();
@@ -128,8 +164,8 @@ public class RunVoting {
 
 		for (Iterator iterAut = authorList.iterator(); iterAut.hasNext();) {
 			Author author = (Author) iterAut.next();
-//			System.out.printf("author:: %s\n", author.getFirstAndLastName());
-			tmp.append(author.getFirstAndLastName()+";");
+			// System.out.printf("author:: %s\n", author.getFirstAndLastName());
+			tmp.append(author.getFirstAndLastName() + ";");
 		}
 
 		return tmp.toString();

@@ -11,7 +11,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
 
-public class Voting {
+public class Voting extends Choose {
 
 	public static InstanceValue getFactoByVoting(Book b, BaseOfAllBooks allBooks) {
 
@@ -75,7 +75,8 @@ public class Voting {
 
 	}
 
-	private static InstanceValue getMaxCount(Hashtable<String, Integer> countOcur) {
+	private static InstanceValue getMaxCount(
+			Hashtable<String, Integer> countOcur) {
 
 		int max = -1;
 		String maxValue = "";
@@ -101,13 +102,20 @@ public class Voting {
 	private static String FactoValue(ArrayList<Author> authorList) {
 		StringBuilder tmp = new StringBuilder();
 
-		for (Iterator<Author> iterAut = authorList.iterator(); iterAut.hasNext();) {
+		for (Iterator<Author> iterAut = authorList.iterator(); iterAut
+				.hasNext();) {
 			Author author = (Author) iterAut.next();
-			// System.out.printf("author:: %s\n", author.getFirstAndLastName());
+			System.out.printf("author:: %s\n", author.getFirstAndLastName());
 			tmp.append(author.getFirstAndLastName() + ";");
 		}
 
 		return tmp.toString();
+	}
+
+	@Override
+	public Object getResponse() {
+
+		return null;
 	}
 
 }

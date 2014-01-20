@@ -76,6 +76,7 @@ public class PrepareDataInstance {
 
 		Hashtable<String, Integer> sourcesIds = new Hashtable<String, Integer>();
 		Hashtable<String, Integer> dataIds = new Hashtable<String, Integer>();
+		Hashtable<String, String> dataAndGeneralId = new Hashtable<String, String>(); // esse aqui eh para guardar o ID de verdade, como o ISBN
 		int Occur[][] = null;
 		int iSourceId, jDataId; // use only as temp index
 
@@ -108,6 +109,14 @@ public class PrepareDataInstance {
 				// + dataIds.get(genData.getData()));
 
 			}
+			
+			// apontar um data a um ID da base (quando houver)
+			if (!(dataAndGeneralId.containsKey(genData.getId()))) {
+
+				dataAndGeneralId.put(genData.getData(), genData.getId());
+
+			}
+			
 
 		}
 

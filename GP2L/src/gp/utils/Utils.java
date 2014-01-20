@@ -98,9 +98,9 @@ public class Utils {
 		ArrayList<Author> listOfauthors = null;
 		String data[] = null;
 
-		// System.out.printf("FORMAT (BEFORE) :: %s\n", string);
+//		 System.out.printf("FORMAT (BEFORE) :: %s\n", string);
 		string = clearNoise(string);
-		// System.out.printf("FORMAT (AFTER)  :: %s\n", string);
+//		 System.out.printf("FORMAT (AFTER)  :: %s\n", string);
 
 		if (listOfauthors == null) {	
 			listOfauthors = new ArrayList<Author>();
@@ -175,8 +175,10 @@ public class Utils {
 
 	public static String canonicalValue(String string) {
 
+//		System.out.println("1. CANONIC :: " + string);
 		string = string.replaceAll("\\s+and\\s+", ";");
-		string = string.replaceAll("|", ";");
+		string = string.replaceAll("\\|", ";");
+//		System.out.println("2. CANONIC :: " + string);
 		string = string.replaceAll("^\\s+", "");
 		string = string.replaceAll("$\\s+", "");
 		string = string.replaceAll("\\n", "");
@@ -189,6 +191,25 @@ public class Utils {
 		return string.toLowerCase();
 	}
 
+	
+	public static String getOnlyLetters(String string) {
+
+		string = string.replaceAll("\\s+and\\s+", " ");
+		string = string.replaceAll("\\|", " ");
+		string = string.replaceAll(";", " ");
+		string = string.replaceAll("\\.", " ");
+		string = string.replaceAll(",", " ");
+		string = string.replaceAll("\\n", " ");
+		string = string.replaceAll("\\r", " ");
+		string = string.replaceAll("\\[", " ");
+		string = string.replaceAll("\\]", " ");
+		string = string.replaceAll("^\\s+", "");
+		string = string.replaceAll("$\\s+", "");
+		string = string.replaceAll("\\s+", " ");
+
+		return string.toLowerCase();
+	}
+	
 	private static String clearNoise(String string) {
 
 		string = string.replaceAll("/", ";");

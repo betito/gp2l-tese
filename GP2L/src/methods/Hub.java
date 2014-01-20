@@ -13,7 +13,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 
-public class AccurPR implements Trustworthy {
+public class Hub implements Trustworthy {
 
 	ArrayList<Book> Values = null;
 	double[] CurrentVoteCount = null;
@@ -25,7 +25,7 @@ public class AccurPR implements Trustworthy {
 	Hashtable<String, String> general_facts_id = null;
 	double exec_time;
 
-	public AccurPR(Hashtable<String, Integer> datas,
+	public Hub(Hashtable<String, Integer> datas,
 			Hashtable<String, Integer> srcs,
 			Hashtable<String, String> generalids, int[][] matrix) {
 		super();
@@ -63,9 +63,9 @@ public class AccurPR implements Trustworthy {
 		this.TLastRound = new double[factsLen];
 
 		for (int i = 0; i < this.CurrentVoteCount.length; i++) {
-			this.CurrentVoteCount[i] = 0.0;
-			this.TCurrentRound[i] = Consts.INITIAL_TRUST;
-			this.TLastRound[i] = Consts.INITIAL_TRUST;
+			this.CurrentVoteCount[i] = Consts.INITIAL_TRUST_HUB;
+			this.TCurrentRound[i] = 0.0;
+			this.TLastRound[i] = 0.0;
 		}
 
 	}
@@ -79,40 +79,14 @@ public class AccurPR implements Trustworthy {
 		double sum = 0.0, initT, endT;
 		boolean keep_iteration = true;
 
-		Hashtable<String, Double> Vd = getDistinctDataItems();
-		// Vd = retirar repetições dos dados e assumir o valor das
-		// confiabilidades das fontes
-
 		initT = System.currentTimeMillis();
 
 		for (int round = 0; keep_iteration && (round < 10); round++) {
-			/*
-			 * compute the fact score
-			 */
-			for (Enumeration<String> eni = this.data_id.keys(); eni
-					.hasMoreElements();) {
-				String fname = eni.nextElement();
-				int pos = (this.data_id.get(fname)).intValue();
-				int values[] = matrix[pos];
-
-				for (int j = 0; j < values.length; j++) {
-					if (values[j] != 0) {
-						sum += calculateLn(this.TCurrentRound[j]);
-					}
-				}
-				// System.out
-				// .printf("------------------\nSum for Fact\t[%s]\t%.3f\n______________________\n",
-				// fname, sum);
-
-				this.CurrentVoteCount[pos] = sum;
-				sum = 0.0;
-
-			}
-
+			
 			String stri = "";
 			String strj = "";
 			int avgcount = 0;
-
+			
 			/*
 			 * compute the source thrustness score
 			 */
@@ -149,6 +123,33 @@ public class AccurPR implements Trustworthy {
 				this.TCurrentRound[possrc] = (sum / (double) avgcount);
 
 			}
+			
+			
+			/*
+			 * compute the fact score
+			 */
+			for (Enumeration<String> eni = this.data_id.keys(); eni
+					.hasMoreElements();) {
+				String fname = eni.nextElement();
+				int pos = (this.data_id.get(fname)).intValue();
+				int values[] = matrix[pos];
+
+				for (int j = 0; j < values.length; j++) {
+					if (values[j] != 0) {
+						sum += calculateLn(this.TCurrentRound[j]);
+					}
+				}
+				// System.out
+				// .printf("------------------\nSum for Fact\t[%s]\t%.3f\n______________________\n",
+				// fname, sum);
+
+				this.CurrentVoteCount[pos] = sum;
+				sum = 0.0;
+
+			}
+
+			
+			
 
 			System.out
 					.printf("\n======================================= \nRound :: [%d]\n",
