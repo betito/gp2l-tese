@@ -70,6 +70,26 @@ public class BaseOfAllBooks {
 		return this.listOfOriginalRecord.get(isbn);
 
 	}
+	
+	public String getBookByISBN_asStringInLines(String isbn) {
+
+		StringBuilder strs = new StringBuilder();
+		
+		if (listOfOriginalRecord == null) {
+			return null;
+		}
+
+		ArrayList<String> books = this.listOfOriginalRecord.get(isbn);
+		
+		for (String string : books) {
+			strs.append(string+"\n");
+		}
+		
+		
+		return strs.toString();
+
+	}
+
 
 	private void loadBaseToObject() {
 

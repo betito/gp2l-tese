@@ -1,11 +1,17 @@
 package methods;
 
 import gp.objects.Book;
+import gp.objects.GenericObject;
+import gp.objects.ValueComparatorAsc;
+import gp.objects.ValueComparatorDesc;
 import gp.utils.Consts;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
 
 public class Facto {
 
@@ -16,14 +22,18 @@ public class Facto {
 	int[][] matrix = null;
 	Hashtable<String, Integer> facts_id = null;
 	Hashtable<String, Integer> srcs_id = null;
+	Hashtable<String, String> general_facts_id = null;
+	double exec_time;
 
 	public Facto(Hashtable<String, Integer> facts,
-			Hashtable<String, Integer> srcs, int[][] matrix) {
+			Hashtable<String, Integer> srcs,
+			Hashtable<String, String> generalids, int[][] matrix) {
 		super();
 
 		if (matrix != null) {
 			this.facts_id = facts;
 			this.srcs_id = srcs;
+			this.general_facts_id = generalids;
 			this.matrix = matrix;
 
 			// printHashtable(this.facts_id);
@@ -72,7 +82,7 @@ public class Facto {
 
 		System.out.println("...");
 	}
-	
+
 	public Facto(ArrayList<Book> values) {
 		super();
 		Values = values;
@@ -92,9 +102,10 @@ public class Facto {
 	 * value.
 	 */
 	public void computeVote() {
-		double sum = 0.0;
+		double sum = 0.0, initT, endT;
 		boolean keep_iteration = true;
 
+		initT = System.currentTimeMillis();
 		for (int round = 0; keep_iteration && (round < 10); round++) {
 			/*
 			 * compute the fact score
@@ -171,13 +182,17 @@ public class Facto {
 					this.TLastRound));
 
 			System.out.printf("SIM\t::\t[%.5f]\n", sim);
-			if (1 - sim < 0.0001) {
+			if (1 - sim < Consts.VARIATION) {
 				keep_iteration = false;
 			}
 
 			saveCurrentRound();
 
 		}
+
+		endT = System.currentTimeMillis();
+		this.exec_time = endT - initT;
+		// System.err.printf("Exec time\t%g\n", this.exec_time);
 
 	}
 
@@ -216,6 +231,68 @@ public class Facto {
 
 	}
 
+	public void printFinalTrust() {
+		int pos = 0;
+		String fname = "";
+		System.out.println("Final Trust\n------------------");
+		for (Enumeration<String> eni = this.srcs_id.keys(); eni
+				.hasMoreElements();) {
+			fname = eni.nextElement();
+			pos = (this.srcs_id.get(fname)).intValue();
+			System.out.printf("%s\t=\t%.5f\n", fname, this.TCurrentRound[pos]);
+		}
+
+	}
+
+	public void printFinalTrustAsc() {
+		List<GenericObject> trustSrcList = new ArrayList<GenericObject>();
+		int pos = 0;
+		String fname = "";
+		System.out.println("Final Trust Asc Order\n------------------");
+		for (Enumeration<String> eni = this.srcs_id.keys(); eni
+				.hasMoreElements();) {
+			fname = eni.nextElement();
+			pos = (this.srcs_id.get(fname)).intValue();
+			trustSrcList.add(new GenericObject(fname, this.TCurrentRound[pos]));
+		}
+
+		
+		// sort in ascending order
+		Collections.sort(trustSrcList, new ValueComparatorAsc());
+
+		for (Iterator iterator = trustSrcList.iterator(); iterator.hasNext();) {
+			GenericObject genObj = (GenericObject) iterator.next();
+			System.out.printf("%s\t=\t%.3g\n", genObj.getText1(),
+					genObj.getValue1());
+		}
+
+	}
+	
+	public void printFinalTrustDesc() {
+		List<GenericObject> trustSrcList = new ArrayList<GenericObject>();
+		int pos = 0;
+		String fname = "";
+		System.out.println("Final Trust Asc Order\n------------------");
+		for (Enumeration<String> eni = this.srcs_id.keys(); eni
+				.hasMoreElements();) {
+			fname = eni.nextElement();
+			pos = (this.srcs_id.get(fname)).intValue();
+			trustSrcList.add(new GenericObject(fname, this.TCurrentRound[pos]));
+		}
+
+		
+		// sort in ascending order
+		Collections.sort(trustSrcList, new ValueComparatorDesc());
+
+		for (Iterator iterator = trustSrcList.iterator(); iterator.hasNext();) {
+			GenericObject genObj = (GenericObject) iterator.next();
+			System.out.printf("%s\t=\t%.3g\n", genObj.getText1(),
+					genObj.getValue1());
+		}
+
+	}
+	
+	
 	@SuppressWarnings("unused")
 	private void printCurrentVoteCount() {
 		int pos = 0;
@@ -244,6 +321,98 @@ public class Facto {
 	private double calculateTrust(double votecount) {
 
 		return (1.0 - Math.pow(Math.E, (Consts.EXP_TRUST * votecount)));
+
+	}
+
+	public void getBestFacts() {
+		double sum = 0.0;
+		double maxvalue = 0.0;
+		String source_name = "";
+		String fact_value = "";
+		String generalId = "";
+		String stri = "";
+		String strj = "";
+
+		for (Enumeration<String> eni = this.srcs_id.keys(); eni
+				.hasMoreElements();) {
+			stri = eni.nextElement();
+			int possrc = (this.srcs_id.get(stri)).intValue();
+			strj = "";
+			sum = 0.0;
+			fact_value = stri;
+			maxvalue = 0.0;
+			generalId = "";
+
+			for (Enumeration<String> enj = this.facts_id.keys(); enj
+					.hasMoreElements();) {
+				strj = enj.nextElement();
+				int posf = (this.facts_id.get(strj)).intValue();
+
+				// System.out.printf("\n[%s]-[%s]-[%d]-[%d]=[%d]", strj,
+				// stri,
+				// posf, possrc, matrix[posf][possrc]);
+				if (matrix[posf][possrc] > maxvalue) {
+					maxvalue = matrix[posf][possrc];
+					source_name = strj;
+					generalId = this.general_facts_id.get(stri);
+					fact_value = stri;
+				}
+			}
+
+		}
+
+	}
+
+	public String getBestFacts(String fact) {
+		double sum = 0.0;
+		double maxvalue = 0.0;
+		String source_name = "";
+		String fact_value = "";
+		String generalId = "";
+		String stri = "";
+		String strj = "";
+
+		for (Enumeration<String> eni = this.srcs_id.keys(); eni
+				.hasMoreElements();) {
+			stri = eni.nextElement();
+			int possrc = (this.srcs_id.get(stri)).intValue();
+			strj = "";
+			sum = 0.0;
+			fact_value = stri;
+			maxvalue = 0.0;
+			generalId = "";
+
+			strj = fact;
+			int posf = (this.facts_id.get(strj)).intValue();
+
+			// System.out.printf("\n[%s]-[%s]-[%d]-[%d]=[%d]", strj,
+			// stri,
+			// posf, possrc, matrix[posf][possrc]);
+			if (matrix[posf][possrc] > maxvalue) {
+				maxvalue = matrix[posf][possrc];
+				source_name = strj;
+				generalId = this.general_facts_id.get(stri);
+			}
+
+		}
+
+		return source_name;
+
+	}
+
+	public double getExec_time() {
+		return exec_time;
+	}
+
+	public double getExec_time_inSec() {
+		return (this.exec_time / 1000.0);
+	}
+
+	public void setExec_time(double exec_time) {
+		this.exec_time = exec_time;
+	}
+
+	private void rankTrustworthiness() {
 
 	}
 

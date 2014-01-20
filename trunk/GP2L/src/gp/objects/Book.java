@@ -1,7 +1,11 @@
 package gp.objects;
 
+import gp.utils.Utils;
+
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 public class Book {
 
@@ -149,8 +153,88 @@ public class Book {
 	public void setListOfAuthorsSTR(String listOfAuthorsSTR) {
 		this.listOfAuthorsSTR = listOfAuthorsSTR;
 	}
+
+	public boolean isAuthorExac(String words) {
+
+		String[] ws = Utils.getOnlyLetters(words).split(" ");
+		String[] authors = Utils.getOnlyLetters(
+				getListOfAuthors_FirsAndLastName_toString()).split(" ");
+		Set<String> setws = new HashSet<String>();
+		Set<String> setauthors = new HashSet<String>();
+
+		for (String a : ws) {
+			setws.add(a);
+		}
+
+		for (String a : authors) {
+			setauthors.add(a);
+		}
+		
+		int count = 0;
+		for (Iterator iterator = setauthors.iterator(); iterator.hasNext();) {
+			String string = (String) iterator.next();
+
+			if (setws.contains(string)) {
+				count++;
+			}
+		}
+		
+//		System.out.printf("Count = %d\n", count);
+
+		if (count == setauthors.size()) {
+
+			return true;
+		}
+
+		return false;
+	}
 	
-	
-	
+	public boolean isAuthorIn(String words) {
+
+		String[] ws = Utils.getOnlyLetters(words).split(" ");
+		String[] authors = Utils.getOnlyLetters(
+				getListOfAuthors_FirsAndLastName_toString()).split(" ");
+		Set<String> setws = new HashSet<String>();
+		Set<String> setauthors = new HashSet<String>();
+
+		for (String a : ws) {
+			setws.add(a);
+		}
+
+		for (String a : authors) {
+			setauthors.add(a);
+		}
+		
+//		System.out.println("Authos");
+//		for (Iterator iterator = setauthors.iterator(); iterator.hasNext();) {
+//			String string = (String) iterator.next();
+//			System.out.println(string);
+//		}
+//		
+//		System.out.println("\n===========\nLocal");
+//		for (Iterator iterator = setws.iterator(); iterator.hasNext();) {
+//			String string = (String) iterator.next();
+//			System.out.println(string);
+//		}
+
+		int count = 0;
+		for (Iterator iterator = setauthors.iterator(); iterator.hasNext();) {
+			String string = (String) iterator.next();
+
+			if (setws.contains(string)) {
+				count++;
+			}
+		}
+		
+//		System.out.printf("Count = %d\n", count);
+
+		if (count == setws.size()) {
+
+			return true;
+		}
+
+		return false;
+	}
+
 
 }

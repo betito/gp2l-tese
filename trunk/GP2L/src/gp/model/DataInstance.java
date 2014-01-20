@@ -6,6 +6,7 @@ public class DataInstance {
 
 	private Hashtable<String, Integer> Sources = null;
 	private Hashtable<String, Integer> Data = null;
+	private Hashtable<String, String> DataAndId = null;
 	private int[][] Matrix = null;
 	private static DataInstance instance = null;
 
@@ -52,6 +53,16 @@ public class DataInstance {
 	public void checkMatrix(int i, int j, int value) {
 		Matrix[i][j] = value;
 	}
+
+	public Hashtable<String, String> getDataAndId() {
+		return DataAndId;
+	}
+
+	public void setDataAndId(Hashtable<String, String> dataAndId) {
+		DataAndId = dataAndId;
+	}
+	
+	
 	
 
 }
