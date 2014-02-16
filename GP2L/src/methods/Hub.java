@@ -96,6 +96,7 @@ public class Hub implements Trustworthy {
 				int possrc = (this.srcs_id.get(stri)).intValue();
 				strj = "";
 				avgcount = 0;
+				
 				sum = 0.0;
 				// System.out.printf("[%s]\n", stri);
 

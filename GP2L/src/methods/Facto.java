@@ -292,6 +292,31 @@ public class Facto {
 
 	}
 	
+	public void printFinalTrustRankXML() {
+		List<GenericObject> trustSrcList = new ArrayList<GenericObject>();
+		int pos = 0;
+		String fname = "";
+		System.out.println("Final Trust Asc Order\n------------------");
+		for (Enumeration<String> eni = this.srcs_id.keys(); eni
+				.hasMoreElements();) {
+			fname = eni.nextElement();
+			pos = (this.srcs_id.get(fname)).intValue();
+			trustSrcList.add(new GenericObject(fname, this.TCurrentRound[pos]));
+		}
+
+		
+		// sort in ascending order
+		Collections.sort(trustSrcList, new ValueComparatorDesc());
+
+		for (Iterator iterator = trustSrcList.iterator(); iterator.hasNext();) {
+			GenericObject genObj = (GenericObject) iterator.next();
+			System.out.printf("%s\t=\t%.3g\n", genObj.getText1(),
+					genObj.getValue1());
+		}
+
+	}
+	
+	
 	
 	@SuppressWarnings("unused")
 	private void printCurrentVoteCount() {
